@@ -112,7 +112,7 @@ public final class Celebrate extends JavaPlugin {
 
             Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
             FireworkMeta fireworkMeta = firework.getFireworkMeta();
-            FireworkEffect fireworkEffect = plugin.buildFirework().build();
+            FireworkEffect fireworkEffect = buildFirework().build();
 
             fireworkMeta.clearEffects();
             fireworkMeta.addEffect(fireworkEffect);
