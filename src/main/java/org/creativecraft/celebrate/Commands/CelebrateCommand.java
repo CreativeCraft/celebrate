@@ -14,6 +14,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.creativecraft.celebrate.Celebrate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CommandAlias("celebrate")
 @Description("It's time for a celebration!")
 public class CelebrateCommand extends BaseCommand {
@@ -131,8 +134,7 @@ public class CelebrateCommand extends BaseCommand {
     @CommandPermission("celebrate.admin")
     @Description("List the stored firework locations.")
     public void onListCommand(CommandSender player) {
-        String[] keys = {};
-        int i = 0;
+        List<String> keys = new ArrayList<String>();
 
         for (String key : plugin.getCelebrateData().getCelebrateData().getKeys(false)) {
             Location loc = plugin.getCelebrateData().getCelebrateData().getLocation(key);
@@ -141,15 +143,13 @@ public class CelebrateCommand extends BaseCommand {
                 continue;
             }
 
-            String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
-            String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + "\\)";
+            String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + loc.getWorld().getName();
+            String coords = location.replaceAll(" ", ", ");
 
-            keys[i] = String.format("ID: [%s](run_command=/tp %s hover=&7%s)", key, location, coords);
-
-            i++;
+            keys.add(String.format("[%s](run_command=/tp %s hover=&aClick here&7 to teleport.\n&7%s&7.)", key, location, coords));
         }
 
-        plugin.message(player, "- " + String.join(",", keys));
+        plugin.message(player, "Fireworks list: " + String.join(", ", keys));
     }
 
     /**
