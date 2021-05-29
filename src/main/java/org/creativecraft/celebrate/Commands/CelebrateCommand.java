@@ -130,6 +130,9 @@ public class CelebrateCommand extends BaseCommand {
     @CommandPermission("celebrate.admin")
     @Description("List the stored firework locations.")
     public void onListCommand(Player player) {
+        String[] keys = {};
+        int i = 0;
+
         for (String key : plugin.getCelebrateData().getCelebrateData().getKeys(false)) {
             Location loc = plugin.getCelebrateData().getCelebrateData().getLocation(key);
 
@@ -140,8 +143,12 @@ public class CelebrateCommand extends BaseCommand {
             String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
             String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + "\\)";
 
-            plugin.message(player, String.format("ID: [%s](run_command=/tp %s hover=&7%s)", key, location, coords));
+            keys[i] = String.format("ID: [%s](run_command=/tp %s hover=&7%s)", key, location, coords);
+
+            i++;
         }
+
+        plugin.message(player, "- " + String.join(",", keys));
     }
 
     /**
