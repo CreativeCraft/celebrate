@@ -17,12 +17,10 @@ repositories {
   maven { url = 'https://oss.sonatype.org/content/groups/public/' }
   maven { url = "https://repo.aikar.co/content/groups/aikar/" }
   maven { url = "https://repo.minebench.de/" }
-  maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 }
 
 dependencies {
   compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-  compileOnly 'me.clip:placeholderapi:2.10.9'
   compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
   compile "de.themoep:minedown:1.7.0-SNAPSHOT"
 }
