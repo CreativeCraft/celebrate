@@ -197,7 +197,6 @@ public class CelebrateCommand extends BaseCommand {
     public void onRemoveCommand(Player player, String name) {
         if (!plugin.getCelebrateData().getCelebrateData().contains(name)) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.not-found").replace("{0}", name));
-
             return;
         }
 
@@ -206,7 +205,6 @@ public class CelebrateCommand extends BaseCommand {
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.success").replace("{0}", name));
         } catch (Exception e) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.failed").replace("{0}", name));
-
             plugin.getLogger().info(e.toString());
         }
     }
