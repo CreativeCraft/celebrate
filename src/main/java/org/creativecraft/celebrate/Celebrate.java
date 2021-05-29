@@ -8,7 +8,6 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -20,7 +19,6 @@ import java.util.Set;
 
 public final class Celebrate extends JavaPlugin {
     private PaperCommandManager commandManager;
-    private Configuration config;
     private CelebrateData celebrateData;
 
     @Override
@@ -60,28 +58,26 @@ public final class Celebrate extends JavaPlugin {
      * Register the plugin config.
      */
     public void registerConfig() {
-        config = getConfig();
+        getConfig().addDefault("locale.prefix", "&7[&a&lCreative&fCraft&7]&f");
+        getConfig().addDefault("locale.commands.start.success", "Starting the &afireworks&f show. It will last for &a{0}&f seconds.");
+        getConfig().addDefault("locale.commands.start.running", "A &afireworks&f show is already running.");
+        getConfig().addDefault("locale.commands.start.no-fireworks", "You must add a &afirework&f using &a/celebrate add&f before you can start a show.");
+        getConfig().addDefault("locale.commands.stop.success", "Stopping the &afireworks&f show.");
+        getConfig().addDefault("locale.commands.stop.not-running", "There is not a &afireworks&f show running.");
+        getConfig().addDefault("locale.commands.add.success", "Successfully added &a{0}&f to the fireworks show.");
+        getConfig().addDefault("locale.commands.add.failed", "Failed to add &a{0}&f to the fireworks show. Check console for details.");
+        getConfig().addDefault("locale.commands.remove.success", "Successfully removed &a{0}&f from the firework show.");
+        getConfig().addDefault("locale.commands.remove.failed", "Failed to remove &a{0}&f from the firework show. Check console for details.");
+        getConfig().addDefault("locale.commands.remove.not-found", "Could not find a firework called &a{0}&f.");
+        getConfig().addDefault("locale.commands.list.before", "Fireworks list ({0}): &a");
+        getConfig().addDefault("locale.commands.list.separator", "&7,&a ");
+        getConfig().addDefault("locale.commands.list.empty", "&fThere are no fireworks configured. Type &a/celebrate add&f to get started.");
+        getConfig().addDefault("locale.commands.list.json", "&aClick here&7 to teleport.\n&7{0}");
+        getConfig().addDefault("locale.commands.gun.obtained", "You have obtained the &afireworks&f gun.");
+        getConfig().addDefault("locale.commands.gun.name", "&a&lFireworks&f Gun");
+        getConfig().addDefault("locale.commands.reload.success", "The &aCelebrate&f configuration has been reloaded.");
 
-        config.addDefault("locale.prefix", "&7[&a&lCreative&fCraft&7]&f");
-        config.addDefault("locale.commands.start.success", "Starting the &afireworks&f show. It will last for &a{0}&f seconds.");
-        config.addDefault("locale.commands.start.running", "A &afireworks&f show is already running.");
-        config.addDefault("locale.commands.start.no-fireworks", "You must add a &afirework&f using &a/celebrate add&f before you can start a show.");
-        config.addDefault("locale.commands.stop.success", "Stopping the &afireworks&f show.");
-        config.addDefault("locale.commands.stop.not-running", "There is not a &afireworks&f show running.");
-        config.addDefault("locale.commands.add.success", "Successfully added &a{0}&f to the fireworks show.");
-        config.addDefault("locale.commands.add.failed", "Failed to add &a{0}&f to the fireworks show. Check console for details.");
-        config.addDefault("locale.commands.remove.success", "Successfully removed &a{0}&f from the firework show.");
-        config.addDefault("locale.commands.remove.failed", "Failed to remove &a{0}&f from the firework show. Check console for details.");
-        config.addDefault("locale.commands.remove.not-found", "Could not find a firework called &a{0}&f.");
-        config.addDefault("locale.commands.list.before", "Fireworks list ({0}): &a");
-        config.addDefault("locale.commands.list.separator", "&7,&a ");
-        config.addDefault("locale.commands.list.empty", "&fThere are no fireworks configured. Type &a/celebrate add&f to get started.");
-        config.addDefault("locale.commands.list.json", "&aClick here&7 to teleport.\n&7{0}");
-        config.addDefault("locale.commands.gun.obtained", "You have obtained the &afireworks&f gun.");
-        config.addDefault("locale.commands.gun.name", "&a&lFireworks&f Gun");
-        config.addDefault("locale.commands.reload.success", "The &aCelebrate&f configuration has been reloaded.");
-
-        config.options().copyDefaults(true);
+        getConfig().options().copyDefaults(true);
 
         saveConfig();
     }
