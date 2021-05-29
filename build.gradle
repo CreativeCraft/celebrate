@@ -1,0 +1,42 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+  id 'com.github.johnrengelman.shadow' version '5.2.0'
+  id 'java'
+}
+
+group = 'org.creativecraft'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+  mavenCentral()
+  maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+  maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+  maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+  maven { url = "https://repo.minebench.de/" }
+  maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
+dependencies {
+  compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+  compileOnly 'me.clip:placeholderapi:2.10.9'
+  compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
+  compile "de.themoep:minedown:1.7.0-SNAPSHOT"
+}
+
+shadowJar {
+  relocate 'co.aikar.commands', 'org.creativecraft.celebrate.acf'
+  relocate 'co.aikar.locales', 'org.creativecraft.celebrate.locales'
+  relocate 'de.themoep.minedown', 'org.creativecraft.celebrate.minedown'
+}
+
+processResources {
+  from(sourceSets.main.resources.srcDirs) {
+    filter ReplaceTokens, tokens: [version: version]
+  }
+}
+
+build.dependsOn shadowJar
