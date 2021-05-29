@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -129,7 +130,7 @@ public class CelebrateCommand extends BaseCommand {
     @Subcommand("list")
     @CommandPermission("celebrate.admin")
     @Description("List the stored firework locations.")
-    public void onListCommand(Player player) {
+    public void onListCommand(CommandSender player) {
         String[] keys = {};
         int i = 0;
 
@@ -207,7 +208,7 @@ public class CelebrateCommand extends BaseCommand {
     @Subcommand("reload")
     @CommandPermission("celebrate.admin")
     @Description("Reload the Celebrate plugin configuration.")
-    public void onReloadCommand(Player player) {
+    public void onReloadCommand(CommandSender player) {
         plugin.reloadConfig();
 
         plugin.message(player, plugin.getConfig().getString("locale.config.success"));
