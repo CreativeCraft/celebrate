@@ -75,7 +75,7 @@ public final class Celebrate extends JavaPlugin {
         config.addDefault("locale.commands.remove.not-found", "Could not find a firework called &a{0}&f.");
         config.addDefault("locale.commands.list.before", "Fireworks list ({0}): &a");
         config.addDefault("locale.commands.list.separator", "&7,&a ");
-        config.addDefault("locale.commands.list.empty", "There are no fireworks configured. Type &a/celebrate add&f to get started.");
+        config.addDefault("locale.commands.list.empty", "&fThere are no fireworks configured. Type &a/celebrate add&f to get started.");
         config.addDefault("locale.commands.list.json", "&aClick here&7 to teleport.\n&7{0}");
         config.addDefault("locale.commands.gun.obtained", "You have obtained the &afireworks&f gun.");
         config.addDefault("locale.commands.gun.name", "&a&lFireworks&f Gun");

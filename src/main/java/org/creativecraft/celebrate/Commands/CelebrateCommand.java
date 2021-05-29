@@ -32,13 +32,17 @@ public class CelebrateCommand extends BaseCommand {
 
     /**
      * Start the fireworks show.
+     *
+     * @param player   The command sender.
+     * @param duration The duration in seconds.
+     * @param message  An optional broadcast message.
      */
     @Subcommand("start")
     @Syntax("<duration> [message]")
     @CommandPermission("celebrate.start")
     @CommandCompletion("15|30|60 message")
     @Description("Start the fireworks show with an optional server-wide message.")
-    public void onStartCommand(Player player, int duration, @Optional String message) {
+    public void onStartCommand(CommandSender player, int duration, @Optional String message) {
         if (this.fireworkShow != null) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.start.running"));
             return;
@@ -80,11 +84,13 @@ public class CelebrateCommand extends BaseCommand {
 
     /**
      * Stop the fireworks show.
+     *
+     * @param player The command sender.
      */
     @Subcommand("stop")
     @CommandPermission("celebrate.start")
     @Description("Stop the fireworks show.")
-    public void onStopCommand(Player player) {
+    public void onStopCommand(CommandSender player) {
         if (this.fireworkShow == null) {
             plugin.message(player,  plugin.getConfig().getString("locale.commands.stop.not-running"));
             return;
@@ -98,6 +104,8 @@ public class CelebrateCommand extends BaseCommand {
 
     /**
      * Retrieve a fireworks gun.
+     *
+     * @param player The command sender.
      */
     @Subcommand("gun")
     @CommandPermission("celebrate.gun")
@@ -157,6 +165,7 @@ public class CelebrateCommand extends BaseCommand {
      * Add a firework to the database.
      *
      * @param player The command sender.
+     * @param name   The firework name.
      */
     @Subcommand("add")
     @Syntax("<name>")
@@ -178,6 +187,7 @@ public class CelebrateCommand extends BaseCommand {
      * Remove a firework from the database.
      *
      * @param player The command sender.
+     * @param name   The firework name.
      */
     @Subcommand("remove")
     @Syntax("<name>")

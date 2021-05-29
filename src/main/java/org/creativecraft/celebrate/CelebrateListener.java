@@ -21,6 +21,7 @@ public class CelebrateListener implements Listener {
 
     /**
      * Determine a head as found when interacted with.
+     *
      * @param e The player interact event.
      */
     @EventHandler

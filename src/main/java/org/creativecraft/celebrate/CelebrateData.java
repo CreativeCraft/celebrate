@@ -17,7 +17,7 @@ public class CelebrateData {
     }
 
     /**
-     * Register the custom head data config.
+     * Register the custom celebrate data config.
      */
     public void registerCelebrateData() {
         celebrateDataFile = new File(plugin.getDataFolder(), "data.yml");
@@ -36,7 +36,7 @@ public class CelebrateData {
     }
 
     /**
-     * Retrieve the head data.
+     * Retrieve the celebrate data.
      *
      * @return FileConfiguration
      */
@@ -45,7 +45,7 @@ public class CelebrateData {
     }
 
     /**
-     * Retrieve the head data file.
+     * Retrieve the celebrate data file.
      *
      * @return File
      */
@@ -54,10 +54,13 @@ public class CelebrateData {
     }
 
     /**
-     * Save the head location to the data file.
+     * Save the firework location to the data file.
+     *
+     * @param name     The firework name.
+     * @param location The firework location.
      */
-    public void setFirework(String name, Location loc) throws IOException {
-        celebrateData.set(name, loc);
+    public void setFirework(String name, Location location) throws IOException {
+        celebrateData.set(name, location);
         celebrateData.save(plugin.getCelebrateData().getCelebrateDataFile());
     }
 }
