@@ -149,7 +149,7 @@ public class CelebrateCommand extends BaseCommand {
             keys.add(String.format("[%s](run_command=/tp %s hover=&aClick here&7 to teleport.\n&7%s&7.)", key, location, coords));
         }
 
-        plugin.message(player, "Fireworks list: " + String.join(", ", keys));
+        plugin.message(player, "Fireworks list: " + (keys.isEmpty() ? "None" : String.join(", ", keys)));
     }
 
     /**
