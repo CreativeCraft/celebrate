@@ -25,6 +25,11 @@ public class CelebrateCommand extends BaseCommand {
     @Dependency
     private Celebrate plugin;
 
+    /**
+     * Display the Celebrate help.
+     *
+     * @param help The CommandHelp instance.
+     */
     @HelpCommand
     public void doHelp(CommandHelp help) {
         help.showHelp();
