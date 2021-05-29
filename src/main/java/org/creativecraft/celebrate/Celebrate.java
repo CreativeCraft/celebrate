@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.creativecraft.celebrate.Commands.CelebrateCommand;
 
 import java.util.Random;
+import java.util.Set;
 
 public final class Celebrate extends JavaPlugin {
     private PaperCommandManager commandManager;
@@ -61,8 +62,24 @@ public final class Celebrate extends JavaPlugin {
     public void registerConfig() {
         config = getConfig();
 
-        config.addDefault("prefix", "&7[&a&lCreative&fCraft&7]&f");
-        config.addDefault("fireworks.gun-name", "&a&lFireworks&f Gun");
+        config.addDefault("locale.prefix", "&7[&a&lCreative&fCraft&7]&f");
+        config.addDefault("locale.commands.start.success", "Starting the &afireworks&f show. It will last for &a{0}&f seconds.");
+        config.addDefault("locale.commands.start.running", "A &afireworks&f show is already running.");
+        config.addDefault("locale.commands.start.no-fireworks", "You must add a &afirework&f using &a/celebrate add&f before you can start a show.");
+        config.addDefault("locale.commands.stop.success", "Stopping the &afireworks&f show.");
+        config.addDefault("locale.commands.stop.not-running", "There is not a &afireworks&f show running.");
+        config.addDefault("locale.commands.add.success", "Successfully added &a{0}&f to the fireworks show.");
+        config.addDefault("locale.commands.add.failed", "Failed to add &a{0}&f to the fireworks show. Check console for details.");
+        config.addDefault("locale.commands.remove.success", "Successfully removed &a{0}&f from the firework show.");
+        config.addDefault("locale.commands.remove.failed", "Failed to remove &a{0}&f from the firework show. Check console for details.");
+        config.addDefault("locale.commands.remove.not-found", "Could not find a firework called &a{0}&f.");
+        config.addDefault("locale.commands.list.before", "Fireworks list ({0}): &a");
+        config.addDefault("locale.commands.list.separator", "&7,&a ");
+        config.addDefault("locale.commands.list.empty", "There are no fireworks configured. Type &a/celebrate add&f to get started.");
+        config.addDefault("locale.commands.list.json", "&aClick here&7 to teleport.\n&7{0}");
+        config.addDefault("locale.commands.gun.obtained", "You have obtained the &afireworks&f gun.");
+        config.addDefault("locale.commands.gun.name", "&a&lFireworks&f Gun");
+        config.addDefault("locale.commands.reload.success", "The &aCelebrate&f configuration has been reloaded.");
 
         config.options().copyDefaults(true);
 
@@ -95,14 +112,20 @@ public final class Celebrate extends JavaPlugin {
      */
     public void message(CommandSender sender, String value) {
         sender.sendMessage(
-            MineDown.parse(config.get("prefix") + " " + value)
+            MineDown.parse(getConfig().getString("locale.prefix") + " " + value)
         );
     }
 
     /**
      * Explode a firework at the configured locations.
      */
-    public void createFirework() {
+    public boolean createFirework() {
+        Set<String> keys = getCelebrateData().getCelebrateData().getKeys(false);
+
+        if (keys.isEmpty()) {
+            return false;
+        }
+
         for (String key : getCelebrateData().getCelebrateData().getKeys(false)) {
             Location location = getCelebrateData().getCelebrateData().getLocation(key);
 
@@ -120,6 +143,8 @@ public final class Celebrate extends JavaPlugin {
 
             firework.setFireworkMeta(fireworkMeta);
         }
+
+        return true;
     }
 
     /**

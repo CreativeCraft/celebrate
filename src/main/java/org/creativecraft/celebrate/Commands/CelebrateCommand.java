@@ -40,11 +40,11 @@ public class CelebrateCommand extends BaseCommand {
     @Description("Start the fireworks show with an optional server-wide message.")
     public void onStartCommand(Player player, int duration, @Optional String message) {
         if (this.fireworkShow != null) {
-            plugin.message(player, "A fireworks show is already running.");
+            plugin.message(player, plugin.getConfig().getString("locale.commands.start.running"));
             return;
         }
 
-        plugin.message(player, "Starting the fireworks show. It will last for &a" + duration + "&f seconds.");
+        plugin.message(player, plugin.getConfig().getString("locale.commands.start.success").replace("{0}", Integer.toString(duration)));
 
         if (message != null) {
             for (Player p : plugin.getServer().getOnlinePlayers()) {
@@ -58,13 +58,18 @@ public class CelebrateCommand extends BaseCommand {
             @Override
             public void run()
             {
-                if (i <= 0) {
+                boolean firework = plugin.createFirework();
+
+                if (i <= 0 || !firework) {
                     this.cancel();
                     CelebrateCommand.this.fireworkShow = null;
+
+                    if (!firework) {
+                        plugin.message(player, plugin.getConfig().getString("locale.commands.start.failed"));
+                    }
+
                     return;
                 }
-
-                plugin.createFirework();
 
                 i--;
             }
@@ -81,26 +86,14 @@ public class CelebrateCommand extends BaseCommand {
     @Description("Stop the fireworks show.")
     public void onStopCommand(Player player) {
         if (this.fireworkShow == null) {
-            plugin.message(player, "There is not a fireworks show running.");
+            plugin.message(player,  plugin.getConfig().getString("locale.commands.stop.not-running"));
             return;
         }
 
-        plugin.message(player, "Stopping the fireworks show.");
+        plugin.message(player, plugin.getConfig().getString("locale.commands.stop.success"));
 
         this.fireworkShow.cancel();
         this.fireworkShow = null;
-    }
-
-    /**
-     * Test the fireworks show.
-     */
-    @Subcommand("test")
-    @CommandPermission("celebrate.start")
-    @Description("Generate a test explosion of all configured fireworks.")
-    public void onTestCommand(Player player) {
-        plugin.message(player, "Generating a test firework explosion.");
-
-        plugin.createFirework();
     }
 
     /**
@@ -116,13 +109,13 @@ public class CelebrateCommand extends BaseCommand {
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes(
             '&',
-            plugin.getConfig().getString("fireworks.gun-name", "Fireworks Gun")
+            plugin.getConfig().getString("locale.commands.gun.name")
         ));
 
         item.setItemMeta(meta);
         inv.setItem(inv.firstEmpty(), item);
 
-        plugin.message(player, "You have obtained the fireworks gun.");
+        plugin.message(player, plugin.getConfig().getString("locale.commands.gun.obtained"));
     }
 
     /**
@@ -146,10 +139,18 @@ public class CelebrateCommand extends BaseCommand {
             String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
             String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + "\\)";
 
-            keys.add(String.format("[%s](run_command=/tp %s hover=&aClick here&7 to teleport.\n&7%s&7.)", key, location, coords));
+            keys.add(
+                String
+                    .format("[%s](run_command=/tp %s hover=%s)", key, location, plugin.getConfig().getString("locale.commands.list.json"))
+                    .replace("{0}", coords)
+            );
         }
 
-        plugin.message(player, "Fireworks list: " + (keys.isEmpty() ? "None" : String.join(", ", keys)));
+        plugin.message(player, plugin.getConfig().getString("locale.commands.list.before").replace("{0}", Integer.toString(keys.size())) + (
+            keys.isEmpty() ?
+                plugin.getConfig().getString("locale.commands.list.empty") :
+                String.join(plugin.getConfig().getString("locale.commands.list.separator"), keys))
+        );
     }
 
     /**
@@ -165,10 +166,10 @@ public class CelebrateCommand extends BaseCommand {
     public void onAddCommand(Player player, String name) {
         try {
             plugin.getCelebrateData().setFirework(name, player.getLocation());
-            plugin.message(player, "Successfully added " + name + " to the fireworks show.");
+            plugin.message(player, plugin.getConfig().getString("locale.commands.add.success").replace("{0}", name));
 
         } catch (Exception e) {
-            plugin.message(player, "Failed to add firework location.");
+            plugin.message(player, plugin.getConfig().getString("locale.commands.add.failed").replace("{0}", name));
             plugin.getLogger().info(e.toString());
         }
     }
@@ -185,16 +186,16 @@ public class CelebrateCommand extends BaseCommand {
     @Description("Remove the specified location from the fireworks show.")
     public void onRemoveCommand(Player player, String name) {
         if (!plugin.getCelebrateData().getCelebrateData().contains(name)) {
-            plugin.message(player, "Could not find a firework called &a" + name);
+            plugin.message(player, plugin.getConfig().getString("locale.commands.remove.not-found").replace("{0}", name));
 
             return;
         }
 
         try {
             plugin.getCelebrateData().setFirework(name, null);
-            plugin.message(player, "Successfully removed " + name + " from the fireworks show.");
+            plugin.message(player, plugin.getConfig().getString("locale.commands.remove.success").replace("{0}", name));
         } catch (Exception e) {
-            plugin.message(player, "Failed to remove firework location.");
+            plugin.message(player, plugin.getConfig().getString("locale.commands.remove.failed").replace("{0}", name));
 
             plugin.getLogger().info(e.toString());
         }
@@ -211,6 +212,6 @@ public class CelebrateCommand extends BaseCommand {
     public void onReloadCommand(CommandSender player) {
         plugin.reloadConfig();
 
-        plugin.message(player, plugin.getConfig().getString("locale.config.success"));
+        plugin.message(player, plugin.getConfig().getString("locale.commands.reload.success"));
     }
 }
