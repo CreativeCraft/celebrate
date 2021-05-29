@@ -143,8 +143,8 @@ public class CelebrateCommand extends BaseCommand {
                 continue;
             }
 
-            String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ() + " " + loc.getWorld().getName();
-            String coords = location.replaceAll(" ", ", ");
+            String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
+            String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + "\\)";
 
             keys.add(String.format("[%s](run_command=/tp %s hover=&aClick here&7 to teleport.\n&7%s&7.)", key, location, coords));
         }
