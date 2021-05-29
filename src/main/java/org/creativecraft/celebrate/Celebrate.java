@@ -122,7 +122,7 @@ public final class Celebrate extends JavaPlugin {
             return false;
         }
 
-        for (String key : getCelebrateData().getCelebrateData().getKeys(false)) {
+        for (String key : keys) {
             Location location = getCelebrateData().getCelebrateData().getLocation(key);
 
             if (location == null || location.getWorld() == null) {
