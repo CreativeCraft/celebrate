@@ -82,7 +82,9 @@ public class CelebrateCommand extends BaseCommand {
         }
 
         plugin.message(player, "Stopping the fireworks show.");
+
         this.fireworkShow.cancel();
+        this.fireworkShow = null;
     }
 
     /**
