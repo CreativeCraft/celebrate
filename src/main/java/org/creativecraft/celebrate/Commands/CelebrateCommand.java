@@ -16,6 +16,8 @@ import org.creativecraft.celebrate.Celebrate;
 @CommandAlias("celebrate")
 @Description("It's time for a celebration!")
 public class CelebrateCommand extends BaseCommand {
+    private BukkitRunnable fireworkShow;
+
     @Dependency
     private Celebrate plugin;
 
@@ -33,6 +35,11 @@ public class CelebrateCommand extends BaseCommand {
     @CommandCompletion("15|30|60 message")
     @Description("Start the fireworks show with an optional server-wide message.")
     public void onStartCommand(Player player, int duration, @Optional String message) {
+        if (this.fireworkShow != null) {
+            plugin.message(player, "A fireworks show is already running.");
+            return;
+        }
+
         plugin.message(player, "Starting the fireworks show. It will last for &a" + duration + "&f seconds.");
 
         if (message != null) {
@@ -41,7 +48,7 @@ public class CelebrateCommand extends BaseCommand {
             }
         }
 
-        new BukkitRunnable() {
+        this.fireworkShow = new BukkitRunnable() {
             int i = duration;
 
             @Override
@@ -49,6 +56,7 @@ public class CelebrateCommand extends BaseCommand {
             {
                 if (i <= 0) {
                     this.cancel();
+                    CelebrateCommand.this.fireworkShow = null;
                     return;
                 }
 
@@ -56,7 +64,27 @@ public class CelebrateCommand extends BaseCommand {
 
                 i--;
             }
-        }.runTaskTimer(plugin, 20L, 20L);
+        };
+
+        this.fireworkShow.runTaskTimer(plugin, 20L, 20L);
+    }
+
+    /**
+     * Stop the fireworks show.
+     */
+    @Subcommand("stop")
+    @CommandPermission("celebrate.start")
+    @Description("Stop the fireworks show.")
+    public void onStopCommand(Player player) {
+        if (this.fireworkShow == null) {
+            plugin.message(player, "There is not a fireworks show running.");
+            return;
+        }
+
+        plugin.message(player, "Stopping the fireworks show.");
+
+        this.fireworkShow.cancel();
+        this.fireworkShow = null;
     }
 
     /**
