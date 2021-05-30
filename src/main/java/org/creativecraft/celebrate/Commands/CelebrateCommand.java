@@ -46,10 +46,25 @@ public class CelebrateCommand extends BaseCommand {
     @Syntax("<duration> [message]")
     @CommandPermission("celebrate.start")
     @CommandCompletion("15|30|60 message")
-    @Description("Start the fireworks show with an optional server-wide message.")
+    @Description("Start the firework show with an optional server-wide message.")
     public void onStartCommand(CommandSender player, int duration, @Optional String message) {
+        int timeLimit = plugin.getConfig().getInt("fireworks.time-limit", 0);
+
+        if (timeLimit != 0 && duration > timeLimit) {
+            plugin.message(
+                player,
+                plugin.getConfig().getString("locale.commands.start.time-limit").replace("{0}", Integer.toString(timeLimit))
+            );
+
+            return;
+        }
+
         if (this.fireworkShow != null) {
-            plugin.message(player, plugin.getConfig().getString("locale.commands.start.running"));
+            plugin.message(
+                player,
+                plugin.getConfig().getString("locale.commands.start.running")
+            );
+
             return;
         }
 
@@ -94,7 +109,7 @@ public class CelebrateCommand extends BaseCommand {
      */
     @Subcommand("stop")
     @CommandPermission("celebrate.start")
-    @Description("Stop the fireworks show.")
+    @Description("Stop the firework show.")
     public void onStopCommand(CommandSender player) {
         if (this.fireworkShow == null) {
             plugin.message(player,  plugin.getConfig().getString("locale.commands.stop.not-running"));
@@ -114,7 +129,7 @@ public class CelebrateCommand extends BaseCommand {
      */
     @Subcommand("gun")
     @CommandPermission("celebrate.gun")
-    @Description("Retrieve a fireworks gun into your inventory.")
+    @Description("Retrieve a firework gun into your inventory.")
     public void onGunCommand(Player player) {
         PlayerInventory inv = player.getInventory();
         ItemStack item = new ItemStack(Material.IRON_HORSE_ARMOR);
@@ -122,13 +137,13 @@ public class CelebrateCommand extends BaseCommand {
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes(
             '&',
-            plugin.getConfig().getString("locale.commands.gun.name")
+            plugin.getConfig().getString("fireworks.gun-name")
         ));
 
         item.setItemMeta(meta);
         inv.setItem(inv.firstEmpty(), item);
 
-        plugin.message(player, plugin.getConfig().getString("locale.commands.gun.obtained"));
+        plugin.message(player, plugin.getConfig().getString("locale.commands.gun.success"));
     }
 
     /**
@@ -176,7 +191,7 @@ public class CelebrateCommand extends BaseCommand {
     @Syntax("<name>")
     @CommandPermission("celebrate.admin")
     @CommandCompletion("name")
-    @Description("Add your current location to the fireworks show.")
+    @Description("Add your current location to the firework show.")
     public void onAddCommand(Player player, String name) {
         try {
             plugin.getCelebrateData().setFirework(name, player.getLocation());
@@ -198,7 +213,7 @@ public class CelebrateCommand extends BaseCommand {
     @Syntax("<name>")
     @CommandPermission("celebrate.admin")
     @CommandCompletion("@fireworks")
-    @Description("Remove the specified location from the fireworks show.")
+    @Description("Remove the specified location from the firework show.")
     public void onRemoveCommand(Player player, String name) {
         if (!plugin.getCelebrateData().getCelebrateData().contains(name)) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.not-found").replace("{0}", name));

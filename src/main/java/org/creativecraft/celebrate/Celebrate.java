@@ -1,7 +1,7 @@
 package org.creativecraft.celebrate;
 
 import co.aikar.commands.MessageType;
-import co.aikar.commands.PaperCommandManager;
+import co.aikar.commands.BukkitCommandManager;
 import de.themoep.minedown.MineDown;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -18,7 +18,7 @@ import java.util.Random;
 import java.util.Set;
 
 public final class Celebrate extends JavaPlugin {
-    private PaperCommandManager commandManager;
+    private BukkitCommandManager commandManager;
     private CelebrateData celebrateData;
 
     @Override
@@ -41,7 +41,7 @@ public final class Celebrate extends JavaPlugin {
      * Register the plugin commands.
      */
     public void registerCommands() {
-        PaperCommandManager commandManager = new PaperCommandManager(this);
+        BukkitCommandManager commandManager = new BukkitCommandManager(this);
 
         commandManager.getCommandCompletions().registerCompletion("fireworks", c -> getCelebrateData().getCelebrateData().getKeys(false));
 
@@ -58,23 +58,27 @@ public final class Celebrate extends JavaPlugin {
      * Register the plugin config.
      */
     public void registerConfig() {
-        getConfig().addDefault("locale.prefix", "&7[&a&lCreative&fCraft&7]&f");
-        getConfig().addDefault("locale.commands.start.success", "Starting the &afireworks&f show. It will last for &a{0}&f seconds.");
-        getConfig().addDefault("locale.commands.start.running", "A &afireworks&f show is already running.");
+        getConfig().addDefault("fireworks.max-power", 5);
+        getConfig().addDefault("fireworks.time-limit", 0);
+        getConfig().addDefault("fireworks.gun-name", "&a&lFirework&f Gun");
+
+        getConfig().addDefault("locale.prefix", "&7[&a&lCele&fbrate&7]&f");
+        getConfig().addDefault("locale.commands.start.success", "Starting the &afirework&f show. It will last for &a{0}&f seconds.");
+        getConfig().addDefault("locale.commands.start.running", "A &afirework&f show is already running.");
+        getConfig().addDefault("locale.commands.start.time-limit", "The maximum firework duration is &a{0}&f.");
         getConfig().addDefault("locale.commands.start.no-fireworks", "You must add a &afirework&f using &a/celebrate add&f before you can start a show.");
-        getConfig().addDefault("locale.commands.stop.success", "Stopping the &afireworks&f show.");
-        getConfig().addDefault("locale.commands.stop.not-running", "There is not a &afireworks&f show running.");
-        getConfig().addDefault("locale.commands.add.success", "Successfully added &a{0}&f to the fireworks show.");
-        getConfig().addDefault("locale.commands.add.failed", "Failed to add &a{0}&f to the fireworks show. Check console for details.");
+        getConfig().addDefault("locale.commands.stop.success", "Stopping the &afirework&f show.");
+        getConfig().addDefault("locale.commands.stop.not-running", "There is not a &afirework&f show running.");
+        getConfig().addDefault("locale.commands.add.success", "Successfully added &a{0}&f to the firework show.");
+        getConfig().addDefault("locale.commands.add.failed", "Failed to add &a{0}&f to the firework show. Check console for details.");
         getConfig().addDefault("locale.commands.remove.success", "Successfully removed &a{0}&f from the firework show.");
         getConfig().addDefault("locale.commands.remove.failed", "Failed to remove &a{0}&f from the firework show. Check console for details.");
         getConfig().addDefault("locale.commands.remove.not-found", "Could not find a firework called &a{0}&f.");
-        getConfig().addDefault("locale.commands.list.before", "Fireworks list ({0}): &a");
+        getConfig().addDefault("locale.commands.list.before", "Firework list ({0}): &a");
         getConfig().addDefault("locale.commands.list.separator", "&7,&a ");
         getConfig().addDefault("locale.commands.list.empty", "&fThere are no fireworks configured. Type &a/celebrate add&f to get started.");
         getConfig().addDefault("locale.commands.list.json", "&aClick here&7 to teleport.\n&7{0}");
-        getConfig().addDefault("locale.commands.gun.obtained", "You have obtained the &afireworks&f gun.");
-        getConfig().addDefault("locale.commands.gun.name", "&a&lFireworks&f Gun");
+        getConfig().addDefault("locale.commands.gun.success", "You have obtained the &afirework&f gun.");
         getConfig().addDefault("locale.commands.reload.success", "The &aCelebrate&f configuration has been reloaded.");
 
         getConfig().options().copyDefaults(true);
@@ -85,9 +89,9 @@ public final class Celebrate extends JavaPlugin {
     /**
      * Retrieve the command manager.
      *
-     * @return PaperCommandManager
+     * @return BukkitCommandManager
      */
-    public PaperCommandManager getCommandManager() {
+    public BukkitCommandManager getCommandManager() {
         return this.commandManager;
     }
 
@@ -107,7 +111,7 @@ public final class Celebrate extends JavaPlugin {
      * @param value  The message value.
      */
     public void message(CommandSender sender, String value) {
-        sender.sendMessage(
+        sender.spigot().sendMessage(
             MineDown.parse(getConfig().getString("locale.prefix") + " " + value)
         );
     }
@@ -135,7 +139,7 @@ public final class Celebrate extends JavaPlugin {
 
             fireworkMeta.clearEffects();
             fireworkMeta.addEffect(fireworkEffect);
-            fireworkMeta.setPower(0);
+            fireworkMeta.setPower(new Random().nextInt(getConfig().getInt("fireworks.max-power", 3)));
 
             firework.setFireworkMeta(fireworkMeta);
         }

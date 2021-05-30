@@ -38,7 +38,7 @@ public class CelebrateListener implements Listener {
         String name = e.getItem().getItemMeta().getDisplayName();
         String configName = ChatColor.translateAlternateColorCodes(
             '&',
-            plugin.getConfig().getString("locale.commands.gun.name")
+            plugin.getConfig().getString("fireworks.gun-name")
         );
 
         if (!name.contains(configName)) {

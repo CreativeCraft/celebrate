@@ -13,15 +13,15 @@ targetCompatibility = '1.8'
 
 repositories {
   mavenCentral()
-  maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+  maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
   maven { url = 'https://oss.sonatype.org/content/groups/public/' }
   maven { url = "https://repo.aikar.co/content/groups/aikar/" }
   maven { url = "https://repo.minebench.de/" }
 }
 
 dependencies {
-  compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-  compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
+  compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+  compile "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
   compile "de.themoep:minedown:1.7.0-SNAPSHOT"
 }
 
