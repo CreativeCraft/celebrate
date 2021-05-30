@@ -59,13 +59,14 @@ public final class Celebrate extends JavaPlugin {
      */
     public void registerConfig() {
         getConfig().addDefault("fireworks.max-power", 5);
-        getConfig().addDefault("fireworks.time-limit", 0);
+        getConfig().addDefault("fireworks.max-duration", 0);
         getConfig().addDefault("fireworks.gun-name", "&a&lFirework&f Gun");
 
         getConfig().addDefault("locale.prefix", "&7[&a&lCele&fbrate&7]&f");
         getConfig().addDefault("locale.commands.start.success", "Starting the &afirework&f show. It will last for &a{0}&f seconds.");
         getConfig().addDefault("locale.commands.start.running", "A &afirework&f show is already running.");
-        getConfig().addDefault("locale.commands.start.time-limit", "The maximum firework duration is &a{0}&f.");
+        getConfig().addDefault("locale.commands.start.max-duration", "The maximum firework duration is &a{0}&f seconds.");
+        getConfig().addDefault("locale.commands.start.min-duration", "The firework duration must be &agreater&f than zero.");
         getConfig().addDefault("locale.commands.start.no-fireworks", "You must add a &afirework&f using &a/celebrate add&f before you can start a show.");
         getConfig().addDefault("locale.commands.stop.success", "Stopping the &afirework&f show.");
         getConfig().addDefault("locale.commands.stop.not-running", "There is not a &afirework&f show running.");

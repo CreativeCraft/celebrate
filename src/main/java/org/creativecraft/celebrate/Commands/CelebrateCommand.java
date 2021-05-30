@@ -48,12 +48,21 @@ public class CelebrateCommand extends BaseCommand {
     @CommandCompletion("15|30|60 message")
     @Description("Start the firework show with an optional server-wide message.")
     public void onStartCommand(CommandSender player, int duration, @Optional String message) {
-        int timeLimit = plugin.getConfig().getInt("fireworks.time-limit", 0);
+        if (duration <= 0) {
+            plugin.message(
+                player,
+                plugin.getConfig().getString("locale.commands.start.min-duration")
+            );
+
+            return;
+        }
+
+        int timeLimit = plugin.getConfig().getInt("fireworks.max-duration", 0);
 
         if (timeLimit != 0 && duration > timeLimit) {
             plugin.message(
                 player,
-                plugin.getConfig().getString("locale.commands.start.time-limit").replace("{0}", Integer.toString(timeLimit))
+                plugin.getConfig().getString("locale.commands.start.max-duration").replace("{0}", Integer.toString(timeLimit))
             );
 
             return;
