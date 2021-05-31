@@ -44,7 +44,9 @@ public final class Celebrate extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        registerWorldGuard();
+        if (getConfig().getBoolean("hooks.worldguard", true)) {
+            registerWorldGuard();
+        }
     }
 
     /**
@@ -94,9 +96,12 @@ public final class Celebrate extends JavaPlugin {
         getConfig().addDefault("gun.name", "&a&lFirework&f Gun");
         getConfig().addDefault("gun.lore", lore);
         getConfig().addDefault("gun.cooldown", 0);
-        getConfig().addDefault("gun.cooldown-message", "Please wait &a{0}&f second(s) before launching a &afirework&f again.");
+
+        getConfig().addDefault("hooks.worldguard", true);
 
         getConfig().addDefault("locale.prefix", "&7[&a&lCele&fbrate&7]&f");
+        getConfig().addDefault("locale.gun.cooldown", "Please wait &a{0}&f second(s) before launching a &afirework&f again.");
+        getConfig().addDefault("locale.gun.worldguard-region", "You're not &aallowed&f to use the &afirework&f gun here.");
         getConfig().addDefault("locale.commands.start.success", "Starting the &afirework&f show. It will last for &a{0}&f second(s).");
         getConfig().addDefault("locale.commands.start.running", "A &afirework&f show is already running.");
         getConfig().addDefault("locale.commands.start.max-duration", "The maximum firework duration is &a{0}&f second(s).");
