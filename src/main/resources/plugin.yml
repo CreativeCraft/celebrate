@@ -1,4 +1,5 @@
 name: Celebrate
 version: @version@
 main: org.creativecraft.celebrate.Celebrate
-api-version: 1.16
+api-version: 1.15
+softdepend: [WorldGuard]

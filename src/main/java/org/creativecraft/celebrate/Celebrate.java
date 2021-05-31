@@ -11,8 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.creativecraft.celebrate.Commands.CelebrateCommand;
+import org.creativecraft.celebrate.Integrations.WorldGuardIntegration;
 import org.creativecraft.celebrate.Listeners.FireworkGunListener;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Set;
 public final class Celebrate extends JavaPlugin {
     private BukkitCommandManager commandManager;
     private CelebrateData celebrateData;
+    private WorldGuardIntegration worldGuard;
 
     @Override
     public void onEnable() {
@@ -39,19 +42,40 @@ public final class Celebrate extends JavaPlugin {
         //
     }
 
+    @Override
+    public void onLoad() {
+        registerWorldGuard();
+    }
+
+    /**
+     * Register the WorldGuard instance.
+     */
+    public void registerWorldGuard() {
+        final Plugin plugin = getServer().getPluginManager().getPlugin("worldguard");
+
+        if (plugin == null || plugin.isEnabled()) {
+            return;
+        }
+
+        this.worldGuard = new WorldGuardIntegration();
+        this.worldGuard.registerFlag();
+
+        getLogger().info("Successfully hooked WorldGuard.");
+    }
+
     /**
      * Register the plugin commands.
      */
     public void registerCommands() {
         BukkitCommandManager commandManager = new BukkitCommandManager(this);
 
-        commandManager.getCommandCompletions().registerCompletion("fireworks", c -> getCelebrateData().getCelebrateData().getKeys(false));
-
         commandManager.enableUnstableAPI("help");
         commandManager.setFormat(MessageType.ERROR, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
         commandManager.setFormat(MessageType.SYNTAX, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
         commandManager.setFormat(MessageType.HELP, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
         commandManager.setFormat(MessageType.INFO, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
+
+        commandManager.getCommandCompletions().registerCompletion("fireworks", c -> getCelebrateData().getCelebrateData().getKeys(false));
 
         commandManager.registerCommand(new CelebrateCommand());
     }
@@ -112,7 +136,16 @@ public final class Celebrate extends JavaPlugin {
      * @return CelebrateData
      */
     public CelebrateData getCelebrateData() {
-        return celebrateData;
+        return this.celebrateData;
+    }
+
+    /**
+     * Retrieve the WorldGuardIntegration instance.
+     *
+     * @return WorldGuardIntegration
+     */
+    public WorldGuardIntegration getWorldGuard() {
+        return this.worldGuard;
     }
 
     /**
