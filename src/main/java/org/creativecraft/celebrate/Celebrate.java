@@ -44,7 +44,7 @@ public final class Celebrate extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (getConfig().getBoolean("hooks.worldguard")) {
+        if (getConfig().getBoolean("hooks.worldguard", true)) {
             registerWorldGuard();
         }
     }
