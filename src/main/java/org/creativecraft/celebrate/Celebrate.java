@@ -63,6 +63,7 @@ public final class Celebrate extends JavaPlugin {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add("&7It's time for a &acelebration&7!");
 
+        getConfig().addDefault("fireworks.min-power", 0);
         getConfig().addDefault("fireworks.max-power", 5);
         getConfig().addDefault("fireworks.max-duration", 0);
 
