@@ -13,7 +13,9 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.creativecraft.celebrate.Commands.CelebrateCommand;
+import org.creativecraft.celebrate.Listeners.FireworkGunListener;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
@@ -29,7 +31,7 @@ public final class Celebrate extends JavaPlugin {
         celebrateData = new CelebrateData(this);
         celebrateData.registerCelebrateData();
 
-        getServer().getPluginManager().registerEvents(new CelebrateListener(this), this);
+        getServer().getPluginManager().registerEvents(new FireworkGunListener(this), this);
     }
 
     @Override
@@ -58,14 +60,22 @@ public final class Celebrate extends JavaPlugin {
      * Register the plugin config.
      */
     public void registerConfig() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add("&7It's time for a &acelebration&7!");
+
+        getConfig().addDefault("fireworks.min-power", 0);
         getConfig().addDefault("fireworks.max-power", 5);
         getConfig().addDefault("fireworks.max-duration", 0);
-        getConfig().addDefault("fireworks.gun-name", "&a&lFirework&f Gun");
+
+        getConfig().addDefault("gun.name", "&a&lFirework&f Gun");
+        getConfig().addDefault("gun.lore", lore);
+        getConfig().addDefault("gun.cooldown", 0);
+        getConfig().addDefault("gun.cooldown-message", "Please wait &a{0}&f second(s) before launching a &afirework&f again.");
 
         getConfig().addDefault("locale.prefix", "&7[&a&lCele&fbrate&7]&f");
-        getConfig().addDefault("locale.commands.start.success", "Starting the &afirework&f show. It will last for &a{0}&f seconds.");
+        getConfig().addDefault("locale.commands.start.success", "Starting the &afirework&f show. It will last for &a{0}&f second(s).");
         getConfig().addDefault("locale.commands.start.running", "A &afirework&f show is already running.");
-        getConfig().addDefault("locale.commands.start.max-duration", "The maximum firework duration is &a{0}&f seconds.");
+        getConfig().addDefault("locale.commands.start.max-duration", "The maximum firework duration is &a{0}&f second(s).");
         getConfig().addDefault("locale.commands.start.min-duration", "The firework duration must be &agreater&f than zero.");
         getConfig().addDefault("locale.commands.start.no-fireworks", "You must add a &afirework&f using &a/celebrate add&f before you can start a show.");
         getConfig().addDefault("locale.commands.stop.success", "Stopping the &afirework&f show.");
