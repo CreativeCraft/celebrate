@@ -48,11 +48,17 @@ public class FireworkGunListener implements Listener {
         Player player = e.getPlayer();
 
         if (plugin.getWorldGuard() != null && !plugin.getWorldGuard().isAllowed(player)) {
+            String worldGuardRegionLocale = plugin.getConfig().getString("locale.gun.worldguard-region");
+
+            if (worldGuardRegionLocale != null) {
+                plugin.message(player, worldGuardRegionLocale);
+            }
+
             return;
         }
 
         if (this.hasCooldown(player)) {
-            String cooldownLocale = plugin.getConfig().getString("gun.cooldown-message");
+            String cooldownLocale = plugin.getConfig().getString("locale.gun.cooldown");
 
             if (cooldownLocale != null) {
                 plugin.message(
