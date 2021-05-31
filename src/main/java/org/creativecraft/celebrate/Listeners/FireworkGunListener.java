@@ -93,7 +93,7 @@ public class FireworkGunListener implements Listener {
     public boolean hasCooldown(Player player) {
         long cooldown = plugin.getConfig().getLong("gun.cooldown");
 
-        if (this.Cooldowns.get(player.getName()) == null) {
+        if (player.hasPermission("celebrate.gun.bypass") || this.Cooldowns.get(player.getName()) == null) {
             return false;
         }
 
@@ -113,7 +113,7 @@ public class FireworkGunListener implements Listener {
         }
 
         return TimeUnit.MILLISECONDS.toSeconds(
-            this.Cooldowns.get(player.getName()) - System.currentTimeMillis() - (cooldown * 1000)
+            this.Cooldowns.get(player.getName()) - (System.currentTimeMillis() - cooldown * 1000)
         ) + 1;
     }
 
