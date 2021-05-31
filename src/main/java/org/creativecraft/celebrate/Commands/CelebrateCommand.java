@@ -32,6 +32,7 @@ public class CelebrateCommand extends BaseCommand {
      * @param help The CommandHelp instance.
      */
     @HelpCommand
+    @Description("Display the Celebrate help.")
     public void doHelp(CommandHelp help) {
         help.showHelp();
     }
