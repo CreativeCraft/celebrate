@@ -16,9 +16,10 @@ import org.creativecraft.celebrate.Celebrate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CommandAlias("celebrate")
-@Description("It's time for a celebration!")
+@Description("Create a beautiful firework show in seconds.")
 public class CelebrateCommand extends BaseCommand {
     private BukkitRunnable fireworkShow;
 
@@ -144,10 +145,15 @@ public class CelebrateCommand extends BaseCommand {
         ItemStack item = new ItemStack(Material.IRON_HORSE_ARMOR);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes(
-            '&',
-            plugin.getConfig().getString("fireworks.gun-name")
-        ));
+        meta.setDisplayName(
+            ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("gun.name", "Firework Gun"))
+        );
+
+        meta.setLore(
+            plugin.getConfig().getStringList("gun.lore").stream().map(
+                lore -> ChatColor.translateAlternateColorCodes('&', lore)
+            ).collect(Collectors.toList())
+        );
 
         item.setItemMeta(meta);
         inv.setItem(inv.firstEmpty(), item);
@@ -174,7 +180,7 @@ public class CelebrateCommand extends BaseCommand {
             }
 
             String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
-            String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + "\\)";
+            String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + ")";
 
             keys.add(
                 String
@@ -186,7 +192,7 @@ public class CelebrateCommand extends BaseCommand {
         plugin.message(player, plugin.getConfig().getString("locale.commands.list.before").replace("{0}", Integer.toString(keys.size())) + (
             keys.isEmpty() ?
                 plugin.getConfig().getString("locale.commands.list.empty") :
-                String.join(plugin.getConfig().getString("locale.commands.list.separator"), keys))
+                String.join(plugin.getConfig().getString("locale.commands.list.separator", ", "), keys))
         );
     }
 
@@ -205,7 +211,6 @@ public class CelebrateCommand extends BaseCommand {
         try {
             plugin.getCelebrateData().setFirework(name, player.getLocation());
             plugin.message(player, plugin.getConfig().getString("locale.commands.add.success").replace("{0}", name));
-
         } catch (Exception e) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.add.failed").replace("{0}", name));
             plugin.getLogger().info(e.toString());
