@@ -71,7 +71,6 @@ public final class Celebrate extends JavaPlugin {
     public void registerCommands() {
         BukkitCommandManager commandManager = new BukkitCommandManager(this);
 
-        commandManager.enableUnstableAPI("help");
         commandManager.setFormat(MessageType.ERROR, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
         commandManager.setFormat(MessageType.SYNTAX, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
         commandManager.setFormat(MessageType.HELP, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
@@ -87,6 +86,17 @@ public final class Celebrate extends JavaPlugin {
      */
     public void registerConfig() {
         ArrayList<String> lore = new ArrayList<String>();
+        ArrayList<String> help = new ArrayList<String>();
+
+        help.add("&a&m+&8&m--------------------&a&l Cele&fbrate &8&m--------------------&a&m+");
+        help.add("&8➝&a /celebrate start &f<duration> [message] &7–&f Start the firework show with an optional server-wide message.");
+        help.add("&8➝&a /celebrate stop &7–&f Stop the firework show.");
+        help.add("&8➝&a /celebrate add &f<name> &7–&f Add your current location to the firework show.");
+        help.add("&8➝&a /celebrate remove &f<name> &7–&f Remove the specified location from the firework show.");
+        help.add("&8➝&a /celebrate list &7–&f List the stored firework locations.");
+        help.add("&8➝&a /celebrate gun &7–&f Retrieve the firework gun into your inventory.");
+        help.add("&8➝&a /celebrate reload &7–&f Reload the Celebrate plugin configuration.");
+
         lore.add("&7It's time for a &acelebration&7!");
 
         getConfig().addDefault("fireworks.min-power", 0);
@@ -120,6 +130,7 @@ public final class Celebrate extends JavaPlugin {
         getConfig().addDefault("locale.commands.list.json", "&aClick here&7 to teleport.\n&7{0}");
         getConfig().addDefault("locale.commands.gun.success", "You have obtained the &afirework&f gun.");
         getConfig().addDefault("locale.commands.reload.success", "The &aCelebrate&f configuration has been reloaded.");
+        getConfig().addDefault("locale.commands.help", help);
 
         getConfig().options().copyDefaults(true);
 
