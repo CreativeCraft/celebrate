@@ -1,8 +1,8 @@
 package org.creativecraft.celebrate.Commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
+import de.themoep.minedown.MineDown;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,12 +29,16 @@ public class CelebrateCommand extends BaseCommand {
     /**
      * Display the Celebrate help.
      *
-     * @param help The CommandHelp instance.
+     * @param player The command sender.
      */
     @HelpCommand
     @Description("Display the Celebrate help.")
-    public void doHelp(CommandHelp help) {
-        help.showHelp();
+    public void doHelp(CommandSender player) {
+        for (String s : plugin.getConfig().getStringList("locale.commands.help")) {
+            player.spigot().sendMessage(
+                MineDown.parse(s)
+            );
+        }
     }
 
     /**
