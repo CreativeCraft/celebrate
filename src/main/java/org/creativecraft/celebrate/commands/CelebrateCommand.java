@@ -1,4 +1,4 @@
-package org.creativecraft.celebrate.Commands;
+package org.creativecraft.celebrate.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.creativecraft.celebrate.Celebrate;
@@ -33,7 +34,7 @@ public class CelebrateCommand extends BaseCommand {
      */
     @HelpCommand
     @Description("Display the Celebrate help.")
-    public void doHelp(CommandSender player) {
+    public void onHelpCommand(CommandSender player) {
         for (String s : plugin.getConfig().getStringList("locale.commands.help")) {
             player.spigot().sendMessage(
                 MineDown.parse(s)
@@ -177,15 +178,15 @@ public class CelebrateCommand extends BaseCommand {
     public void onListCommand(CommandSender player) {
         List<String> keys = new ArrayList<String>();
 
-        for (String key : plugin.getCelebrateData().getCelebrateData().getKeys(false)) {
-            Location loc = plugin.getCelebrateData().getCelebrateData().getLocation(key);
+        for (String key : plugin.getCelebrateData().get().getKeys(false)) {
+            Location loc = plugin.getCelebrateData().get().getLocation(key + ".location");
 
             if (loc == null) {
                 continue;
             }
 
             String location = loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
-            String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + ")";
+            String coords = location.replaceAll(" ", ", ") + " (" + loc.getWorld().getName() + "\\)";
 
             keys.add(
                 String
@@ -214,7 +215,7 @@ public class CelebrateCommand extends BaseCommand {
     @Description("Add your current location to the firework show.")
     public void onAddCommand(Player player, String name) {
         try {
-            plugin.getCelebrateData().setFirework(name, player.getLocation());
+            plugin.getCelebrateData().addFireworkLocation(name, player.getLocation());
             plugin.message(player, plugin.getConfig().getString("locale.commands.add.success").replace("{0}", name));
         } catch (Exception e) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.add.failed").replace("{0}", name));
@@ -234,16 +235,79 @@ public class CelebrateCommand extends BaseCommand {
     @CommandCompletion("@fireworks")
     @Description("Remove the specified location from the firework show.")
     public void onRemoveCommand(Player player, String name) {
-        if (!plugin.getCelebrateData().getCelebrateData().contains(name)) {
+        if (!plugin.getCelebrateData().get().contains(name)) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.not-found").replace("{0}", name));
             return;
         }
 
         try {
-            plugin.getCelebrateData().setFirework(name, null);
+            plugin.getCelebrateData().removeFireworkLocation(name);
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.success").replace("{0}", name));
         } catch (Exception e) {
             plugin.message(player, plugin.getConfig().getString("locale.commands.remove.failed").replace("{0}", name));
+            plugin.getLogger().info(e.toString());
+        }
+    }
+
+    /**
+     * Set the currently held firework as a custom rocket for the specified location.
+     *
+     * @param player The command sender.
+     * @param name   The firework name.
+     */
+    @Subcommand("set")
+    @Syntax("<name>")
+    @CommandPermission("celebrate.admin")
+    @CommandCompletion("@fireworks")
+    @Description("Set the currently held firework as a custom rocket for the specified location.")
+    public void onSetCommand(Player player, String name) {
+        ItemStack firework = player.getInventory().getItemInMainHand();
+
+        if (firework.getType() != Material.FIREWORK_ROCKET) {
+            plugin.message(player,  plugin.getConfig().getString("locale.commands.set.in-hand"));
+            return;
+        }
+
+        try {
+            FireworkMeta fireworkMeta = (FireworkMeta) plugin.getCelebrateData().get().get(name + ".firework");
+            plugin.getCelebrateData().addFirework(name, (FireworkMeta) firework.getItemMeta());
+
+            if (fireworkMeta != null) {
+                plugin.message(player, plugin.getConfig().getString("locale.commands.set.changed").replace("{0}", name));
+                return;
+            }
+
+            plugin.message(player, plugin.getConfig().getString("locale.commands.set.success").replace("{0}", name));
+        } catch (Exception e) {
+            plugin.message(player, plugin.getConfig().getString("locale.commands.set.failed").replace("{0}", name));
+            plugin.getLogger().info(e.toString());
+        }
+    }
+
+    /**
+     * Unset the custom rocket on the specified location.
+     *
+     * @param player The command sender.
+     * @param name   The firework name.
+     */
+    @Subcommand("unset")
+    @Syntax("<name>")
+    @CommandPermission("celebrate.admin")
+    @CommandCompletion("@fireworks")
+    @Description("Unset the custom rocket on the specified location.")
+    public void onUnsetCommand(Player player, String name) {
+        FireworkMeta fireworkMeta = (FireworkMeta) plugin.getCelebrateData().get().get(name + ".firework");
+
+        if (fireworkMeta == null) {
+            plugin.message(player, "There is not a custom firework rocket set on &a{0}&f.".replace("{0}", name));
+            return;
+        }
+
+        try {
+            plugin.getCelebrateData().removeFirework(name);
+            plugin.message(player, "Successfully unset the custom firework rocket on &a{0}&f.".replace("{0}", name));
+        } catch (Exception e) {
+            plugin.message(player, "Failed to unset the custom firework rocket on &a{0}&f. Check console for details.".replace("{0}", name));
             plugin.getLogger().info(e.toString());
         }
     }

@@ -13,9 +13,9 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.creativecraft.celebrate.Commands.CelebrateCommand;
-import org.creativecraft.celebrate.Integrations.WorldGuardIntegration;
-import org.creativecraft.celebrate.Listeners.FireworkGunListener;
+import org.creativecraft.celebrate.commands.CelebrateCommand;
+import org.creativecraft.celebrate.integrations.WorldGuardIntegration;
+import org.creativecraft.celebrate.listeners.FireworkGunListener;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -56,6 +56,7 @@ public final class Celebrate extends JavaPlugin {
         final Plugin plugin = getServer().getPluginManager().getPlugin("worldguard");
 
         if (plugin == null || plugin.isEnabled()) {
+            getLogger().info("Unable to hook into WorldGuard at this time.");
             return;
         }
 
@@ -76,7 +77,7 @@ public final class Celebrate extends JavaPlugin {
         commandManager.setFormat(MessageType.HELP, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
         commandManager.setFormat(MessageType.INFO, ChatColor.GREEN, ChatColor.WHITE, ChatColor.GRAY);
 
-        commandManager.getCommandCompletions().registerCompletion("fireworks", c -> getCelebrateData().getCelebrateData().getKeys(false));
+        commandManager.getCommandCompletions().registerCompletion("fireworks", c -> getCelebrateData().get().getKeys(false));
 
         commandManager.registerCommand(new CelebrateCommand());
     }
@@ -93,6 +94,8 @@ public final class Celebrate extends JavaPlugin {
         help.add("&8➝&a /celebrate stop &7–&f Stop the firework show.");
         help.add("&8➝&a /celebrate add &f<name> &7–&f Add your current location to the firework show.");
         help.add("&8➝&a /celebrate remove &f<name> &7–&f Remove the specified location from the firework show.");
+        help.add("&8➝&a /celebrate set &f<name> &7–&f Set the currently held firework as a custom rocket for the specified location.");
+        help.add("&8➝&a /celebrate unset &f<name> &7–&f Unset the custom rocket on the specified location.");
         help.add("&8➝&a /celebrate list &7–&f List the stored firework locations.");
         help.add("&8➝&a /celebrate gun &7–&f Retrieve the firework gun into your inventory.");
         help.add("&8➝&a /celebrate reload &7–&f Reload the Celebrate plugin configuration.");
@@ -124,6 +127,10 @@ public final class Celebrate extends JavaPlugin {
         getConfig().addDefault("locale.commands.remove.success", "Successfully removed &a{0}&f from the firework show.");
         getConfig().addDefault("locale.commands.remove.failed", "Failed to remove &a{0}&f from the firework show. Check console for details.");
         getConfig().addDefault("locale.commands.remove.not-found", "Could not find a firework called &a{0}&f.");
+        getConfig().addDefault("locale.commands.set.success", "Successfully set a custom firework rocket on &a{0}&f.");
+        getConfig().addDefault("locale.commands.set.failed", "Failed to set a custom firework rocket on &a{0}&f. Check console for details.");
+        getConfig().addDefault("locale.commands.set.changed", "Successfully changed the custom firework rocket on &a{0}&f.");
+        getConfig().addDefault("locale.commands.set.in-hand", "You must be holding a &afirework rocket&f in your main hand.");
         getConfig().addDefault("locale.commands.list.before", "Firework list ({0}): &a");
         getConfig().addDefault("locale.commands.list.separator", "&7,&a ");
         getConfig().addDefault("locale.commands.list.empty", "&fThere are no fireworks configured. Type &a/celebrate add&f to get started.");
@@ -180,28 +187,35 @@ public final class Celebrate extends JavaPlugin {
      * Explode a firework at the configured locations.
      */
     public boolean createFirework() {
-        Set<String> keys = getCelebrateData().getCelebrateData().getKeys(false);
+        Set<String> keys = getCelebrateData().get().getKeys(false);
 
         if (keys.isEmpty()) {
             return false;
         }
 
         for (String key : keys) {
-            Location location = getCelebrateData().getCelebrateData().getLocation(key);
+            Location location = getCelebrateData().get().getLocation(key + ".location");
+            FireworkMeta customFireworkMeta = (FireworkMeta) getCelebrateData().get().get(key + ".firework");
 
             if (location == null || location.getWorld() == null) {
                 continue;
             }
 
             Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-            FireworkMeta fireworkMeta = firework.getFireworkMeta();
-            FireworkEffect fireworkEffect = buildFirework().build();
 
-            fireworkMeta.clearEffects();
-            fireworkMeta.addEffect(fireworkEffect);
-            fireworkMeta.setPower(new Random().nextInt(getConfig().getInt("fireworks.max-power", 3)));
+            if (customFireworkMeta == null) {
+                FireworkMeta fireworkMeta = firework.getFireworkMeta();
+                FireworkEffect fireworkEffect = buildFirework().build();
 
-            firework.setFireworkMeta(fireworkMeta);
+                fireworkMeta.clearEffects();
+                fireworkMeta.addEffect(fireworkEffect);
+                fireworkMeta.setPower(new Random().nextInt(getConfig().getInt("fireworks.max-power", 3)));
+                firework.setFireworkMeta(fireworkMeta);
+            } else {
+                customFireworkMeta.setPower(new Random().nextInt(getConfig().getInt("fireworks.max-power", 3)));
+                firework.setFireworkMeta(customFireworkMeta);
+            }
+
         }
 
         return true;

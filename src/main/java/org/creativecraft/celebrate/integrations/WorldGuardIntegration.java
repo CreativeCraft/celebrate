@@ -1,4 +1,4 @@
-package org.creativecraft.celebrate.Integrations;
+package org.creativecraft.celebrate.integrations;
 
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;

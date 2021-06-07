@@ -3,6 +3,7 @@ package org.creativecraft.celebrate;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class CelebrateData {
      *
      * @return FileConfiguration
      */
-    public FileConfiguration getCelebrateData() {
+    public FileConfiguration get() {
         return this.celebrateData;
     }
 
@@ -54,13 +55,44 @@ public class CelebrateData {
     }
 
     /**
-     * Save the firework location to the data file.
+     * Save the specified firework meta to the data file.
+     *
+     * @param name     The firework name.
+     * @param firework The firework meta.
+     */
+    public void addFirework(String name, FireworkMeta firework) throws IOException {
+        celebrateData.set(name + ".firework", firework);
+        celebrateData.save(plugin.getCelebrateData().getCelebrateDataFile());
+    }
+
+    /**
+     * Remove the specified firework meta from the data file.
+     *
+     * @param name     The firework name.
+     */
+    public void removeFirework(String name) throws IOException {
+        celebrateData.set(name + ".firework", null);
+        celebrateData.save(plugin.getCelebrateData().getCelebrateDataFile());
+    }
+
+    /**
+     * Save the specified firework location to the data file.
      *
      * @param name     The firework name.
      * @param location The firework location.
      */
-    public void setFirework(String name, Location location) throws IOException {
-        celebrateData.set(name, location);
+    public void addFireworkLocation(String name, Location location) throws IOException {
+        celebrateData.set(name + ".location", location);
+        celebrateData.save(plugin.getCelebrateData().getCelebrateDataFile());
+    }
+
+    /**
+     * Remove the specified firework location from the data file.
+     *
+     * @param name     The firework name.
+     */
+    public void removeFireworkLocation(String name) throws IOException {
+        celebrateData.set(name, null);
         celebrateData.save(plugin.getCelebrateData().getCelebrateDataFile());
     }
 }

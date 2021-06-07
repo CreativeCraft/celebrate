@@ -1,4 +1,4 @@
-package org.creativecraft.celebrate.Listeners;
+package org.creativecraft.celebrate.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.FireworkEffect;
@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class FireworkGunListener implements Listener {
     private final Celebrate plugin;
     HashMap<String, Long> Cooldowns = new HashMap<String, Long>();
+    HashMap<String, Long> lastClick = new HashMap<String, Long>();
 
     /**
      * Initialize the celebrate listener.
@@ -30,7 +31,7 @@ public class FireworkGunListener implements Listener {
     }
 
     /**
-     * Determine a head as found when interacted with.
+     * Fire the celebrate gun when interacted with.
      *
      * @param e The player interact event.
      */
