@@ -105,7 +105,9 @@ public final class Celebrate extends JavaPlugin {
 
         getConfig().addDefault("gun.name", "&a&lFirework&f Gun");
         getConfig().addDefault("gun.lore", lore);
+        getConfig().addDefault("gun.type", "IRON_HORSE_ARMOR");
         getConfig().addDefault("gun.cooldown", 0);
+        getConfig().addDefault("gun.unique", true);
 
         getConfig().addDefault("hooks.worldguard", true);
 

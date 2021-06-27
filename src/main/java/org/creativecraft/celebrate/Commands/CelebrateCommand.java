@@ -33,7 +33,7 @@ public class CelebrateCommand extends BaseCommand {
      */
     @HelpCommand
     @Description("Display the Celebrate help.")
-    public void doHelp(CommandSender player) {
+    public void onHelpCommand(CommandSender player) {
         for (String s : plugin.getConfig().getStringList("locale.commands.help")) {
             player.spigot().sendMessage(
                 MineDown.parse(s)
@@ -146,13 +146,31 @@ public class CelebrateCommand extends BaseCommand {
     @CommandPermission("celebrate.gun")
     @Description("Retrieve a firework gun into your inventory.")
     public void onGunCommand(Player player) {
-        PlayerInventory inv = player.getInventory();
-        ItemStack item = new ItemStack(Material.IRON_HORSE_ARMOR);
-        ItemMeta meta = item.getItemMeta();
-
-        meta.setDisplayName(
-            ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("gun.name", "Firework Gun"))
+        String name = ChatColor.translateAlternateColorCodes(
+            '&',
+            plugin.getConfig().getString("gun.name", "Firework Gun")
         );
+
+        ItemStack item = new ItemStack(
+            Material.valueOf(plugin.getConfig().getString("gun.type", "IRON_HORSE_ARMOR"))
+        );
+
+        ItemMeta meta = item.getItemMeta();
+        PlayerInventory inventory = player.getInventory();
+
+        if (plugin.getConfig().getBoolean("gun.unique")) {
+            for (ItemStack i : inventory.getContents()) {
+                if (i == null) {
+                    continue;
+                }
+
+                if (i.getItemMeta().getDisplayName().equals(name)) {
+                    inventory.remove(i);
+                }
+            }
+        }
+
+        meta.setDisplayName(name);
 
         meta.setLore(
             plugin.getConfig().getStringList("gun.lore").stream().map(
@@ -161,7 +179,7 @@ public class CelebrateCommand extends BaseCommand {
         );
 
         item.setItemMeta(meta);
-        inv.setItem(inv.firstEmpty(), item);
+        inventory.setItem(inventory.firstEmpty(), item);
 
         plugin.message(player, plugin.getConfig().getString("locale.commands.gun.success"));
     }

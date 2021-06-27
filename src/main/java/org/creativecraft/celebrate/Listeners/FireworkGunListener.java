@@ -39,13 +39,22 @@ public class FireworkGunListener implements Listener {
         if (
             !e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
             e.getItem() == null ||
-            !e.getItem().getType().equals(Material.IRON_HORSE_ARMOR) ||
-            !e.getPlayer().hasPermission("celebrate.gun")
+            !e.getItem().getType().equals(Material.valueOf(plugin.getConfig().getString("gun.type", "IRON_HORSE_ARMOR"))) ||
+            (!e.getPlayer().hasPermission("celebrate.gun") || !e.getPlayer().hasPermission("celebrate.gun.use"))
         ) {
             return;
         }
 
         Player player = e.getPlayer();
+        String itemName = e.getItem().getItemMeta().getDisplayName();
+        String configName = ChatColor.translateAlternateColorCodes(
+            '&',
+            plugin.getConfig().getString("gun.name", "Firework Gun")
+        );
+
+        if (!itemName.equals(configName)) {
+            return;
+        }
 
         if (plugin.getWorldGuard() != null && !plugin.getWorldGuard().isAllowed(player)) {
             String worldGuardRegionLocale = plugin.getConfig().getString("locale.gun.worldguard-region");
@@ -70,16 +79,6 @@ public class FireworkGunListener implements Listener {
             return;
         }
 
-        String name = e.getItem().getItemMeta().getDisplayName();
-        String configName = ChatColor.translateAlternateColorCodes(
-            '&',
-            plugin.getConfig().getString("gun.name", "Firework Gun")
-        );
-
-        if (!name.equals(configName)) {
-            return;
-        }
-
         Firework firework = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
         FireworkEffect fireworkEffect = plugin.buildFirework().build();
@@ -89,9 +88,9 @@ public class FireworkGunListener implements Listener {
         fireworkMeta.setPower(plugin.getConfig().getInt("fireworks.min-power", 0));
 
         firework.setFireworkMeta(fireworkMeta);
-        firework.setVelocity(e.getPlayer().getLocation().getDirection().multiply(0.5));
+        firework.setVelocity(player.getLocation().getDirection().multiply(0.5));
 
-        this.setCooldown(e.getPlayer());
+        this.setCooldown(player);
     }
 
     /**
