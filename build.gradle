@@ -23,14 +23,16 @@ repositories {
 dependencies {
   compileOnly 'org.spigotmc:spigot-api:1.15-R0.1-SNAPSHOT'
   compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
-  compile "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
-  compile "de.themoep:minedown:1.7.0-SNAPSHOT"
+  compile 'co.aikar:acf-bukkit:0.5.0-SNAPSHOT'
+  compile 'de.themoep:minedown:1.7.0-SNAPSHOT'
+  compile 'org.bstats:bstats-bukkit-lite:1.8'
 }
 
 shadowJar {
   relocate 'co.aikar.commands', 'org.creativecraft.celebrate.acf'
   relocate 'co.aikar.locales', 'org.creativecraft.celebrate.locales'
   relocate 'de.themoep.minedown', 'org.creativecraft.celebrate.minedown'
+  relocate 'org.bstats', 'org.creativecraft.celebrate.bstats'
 }
 
 processResources {

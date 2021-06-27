@@ -3,6 +3,7 @@ package org.creativecraft.celebrate;
 import co.aikar.commands.MessageType;
 import co.aikar.commands.BukkitCommandManager;
 import de.themoep.minedown.MineDown;
+import org.bstats.bukkit.MetricsLite;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -35,6 +36,8 @@ public final class Celebrate extends JavaPlugin {
         celebrateData.registerCelebrateData();
 
         getServer().getPluginManager().registerEvents(new FireworkGunListener(this), this);
+
+        new MetricsLite(this, 11847);
     }
 
     @Override
