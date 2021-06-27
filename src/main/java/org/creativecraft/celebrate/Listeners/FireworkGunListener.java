@@ -40,7 +40,7 @@ public class FireworkGunListener implements Listener {
             !e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
             e.getItem() == null ||
             !e.getItem().getType().equals(Material.valueOf(plugin.getConfig().getString("gun.type", "IRON_HORSE_ARMOR"))) ||
-            (!e.getPlayer().hasPermission("celebrate.gun") || !e.getPlayer().hasPermission("celebrate.gun.use"))
+            !e.getPlayer().hasPermission("celebrate.gun")
         ) {
             return;
         }
