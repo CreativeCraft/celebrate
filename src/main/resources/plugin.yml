@@ -1,5 +1,6 @@
 name: Celebrate
-version: 1.0.6
-main: org.creativecraft.celebrate.Celebrate
+version: "${version}"
+description: "Create a beautiful firework display in seconds."
+main: org.creativecraft.celebrate.CelebratePlugin
 api-version: 1.15
 softdepend: [WorldGuard]

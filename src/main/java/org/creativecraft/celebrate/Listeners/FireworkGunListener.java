@@ -1,4 +1,4 @@
-package org.creativecraft.celebrate.Listeners;
+package org.creativecraft.celebrate.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.FireworkEffect;
@@ -11,21 +11,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.creativecraft.celebrate.Celebrate;
+import org.creativecraft.celebrate.CelebratePlugin;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class FireworkGunListener implements Listener {
-    private final Celebrate plugin;
-    HashMap<String, Long> Cooldowns = new HashMap<String, Long>();
+    private final CelebratePlugin plugin;
+    HashMap<String, Long> cooldowns = new HashMap<String, Long>();
 
     /**
      * Initialize the celebrate listener.
      *
      * @param plugin The plugin instance.
      */
-    public FireworkGunListener(Celebrate plugin) {
+    public FireworkGunListener(CelebratePlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -57,31 +57,23 @@ public class FireworkGunListener implements Listener {
         }
 
         if (plugin.getWorldGuard() != null && !plugin.getWorldGuard().isAllowed(player)) {
-            String worldGuardRegionLocale = plugin.getConfig().getString("locale.gun.worldguard-region");
-
-            if (worldGuardRegionLocale != null) {
-                plugin.message(player, worldGuardRegionLocale);
-            }
+            plugin.sendMessage(player, plugin.localize("messages.gun.worldguard-region"));
 
             return;
         }
 
         if (this.hasCooldown(player)) {
-            String cooldownLocale = plugin.getConfig().getString("locale.gun.cooldown");
-
-            if (cooldownLocale != null) {
-                plugin.message(
-                    player,
-                    cooldownLocale.replace("{0}", Long.toString(this.getCooldown(player)))
-                );
-            }
+            plugin.sendMessage(
+                player,
+                plugin.localize("messages.gun.cooldown").replace("{0}", Long.toString(this.getCooldown(player)))
+            );
 
             return;
         }
 
         Firework firework = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
-        FireworkEffect fireworkEffect = plugin.buildFirework().build();
+        FireworkEffect fireworkEffect = plugin.getFirework().buildFirework().build();
 
         fireworkMeta.clearEffects();
         fireworkMeta.addEffect(fireworkEffect);
@@ -102,11 +94,11 @@ public class FireworkGunListener implements Listener {
     public boolean hasCooldown(Player player) {
         long cooldown = plugin.getConfig().getLong("gun.cooldown");
 
-        if (player.hasPermission("celebrate.gun.bypass") || this.Cooldowns.get(player.getName()) == null) {
+        if (player.hasPermission("celebrate.gun.bypass") || cooldowns.get(player.getName()) == null) {
             return false;
         }
 
-        return this.Cooldowns.get(player.getName()) >= (System.currentTimeMillis() - cooldown * 1000);
+        return cooldowns.get(player.getName()) >= (System.currentTimeMillis() - cooldown * 1000);
     }
 
     /**
@@ -117,12 +109,12 @@ public class FireworkGunListener implements Listener {
     public long getCooldown(Player player) {
         long cooldown = plugin.getConfig().getLong("gun.cooldown");
 
-        if (this.Cooldowns.get(player.getName()) == null) {
+        if (cooldowns.get(player.getName()) == null) {
             return 0;
         }
 
         return TimeUnit.MILLISECONDS.toSeconds(
-            this.Cooldowns.get(player.getName()) - (System.currentTimeMillis() - cooldown * 1000)
+            cooldowns.get(player.getName()) - (System.currentTimeMillis() - cooldown * 1000)
         ) + 1;
     }
 
@@ -132,6 +124,6 @@ public class FireworkGunListener implements Listener {
      * @param player The player.
      */
     public void setCooldown(Player player) {
-        this.Cooldowns.put(player.getName(), System.currentTimeMillis());
+        cooldowns.put(player.getName(), System.currentTimeMillis());
     }
 }

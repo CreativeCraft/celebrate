@@ -1,15 +1,14 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 plugins {
-  id 'com.github.johnrengelman.shadow' version '5.2.0'
+  id 'xyz.jpenilla.run-paper' version '1.0.4'
+  id 'com.github.johnrengelman.shadow' version '7.1.1'
   id 'java'
 }
 
 group = 'org.creativecraft'
-version = '1.0.6'
+version = '1.1.0'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = '16'
+targetCompatibility = '16'
 
 repositories {
   mavenCentral()
@@ -23,9 +22,10 @@ repositories {
 dependencies {
   compileOnly 'org.spigotmc:spigot-api:1.15-R0.1-SNAPSHOT'
   compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
-  compile 'co.aikar:acf-bukkit:0.5.0-SNAPSHOT'
-  compile 'de.themoep:minedown:1.7.0-SNAPSHOT'
-  compile 'org.bstats:bstats-bukkit-lite:1.8'
+  compileOnly 'com.plotsquared:PlotSquared-Core:6.2.1'
+  implementation 'co.aikar:acf-bukkit:0.5.0-SNAPSHOT'
+  implementation 'de.themoep:minedown:1.7.0-SNAPSHOT'
+  implementation 'org.bstats:bstats-bukkit-lite:1.8'
 }
 
 shadowJar {
@@ -36,8 +36,11 @@ shadowJar {
 }
 
 processResources {
-  from(sourceSets.main.resources.srcDirs) {
-    filter ReplaceTokens, tokens: [version: version]
+  def props = [version: version]
+  inputs.properties props
+  filteringCharset 'UTF-8'
+  filesMatching('plugin.yml') {
+    expand props
   }
 }
 
