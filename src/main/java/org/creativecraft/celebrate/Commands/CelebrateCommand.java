@@ -143,7 +143,7 @@ public class CelebrateCommand extends BaseCommand {
      * @param player The command sender.
      */
     @Subcommand("gun")
-    @CommandPermission("celebrate.gun")
+    @CommandPermission("celebrate.gun.give")
     @Description("Retrieve a firework gun into your inventory.")
     public void onGunCommand(Player player) {
         String name = ChatColor.translateAlternateColorCodes(
