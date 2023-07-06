@@ -1,4 +1,4 @@
-package org.creativecraft.celebrate.Listeners;
+package org.creativecraft.celebrate.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.FireworkEffect;

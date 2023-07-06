@@ -14,9 +14,9 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.creativecraft.celebrate.Commands.CelebrateCommand;
-import org.creativecraft.celebrate.Integrations.WorldGuardIntegration;
-import org.creativecraft.celebrate.Listeners.FireworkGunListener;
+import org.creativecraft.celebrate.commands.CelebrateCommand;
+import org.creativecraft.celebrate.integrations.WorldGuardIntegration;
+import org.creativecraft.celebrate.listeners.FireworkGunListener;
 
 import java.util.ArrayList;
 import java.util.Random;

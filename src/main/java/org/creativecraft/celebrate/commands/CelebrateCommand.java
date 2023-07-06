@@ -1,4 +1,4 @@
-package org.creativecraft.celebrate.Commands;
+package org.creativecraft.celebrate.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
