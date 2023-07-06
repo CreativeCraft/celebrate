@@ -54,6 +54,15 @@ public class CelebrateCommand extends BaseCommand {
     @CommandCompletion("15|30|60 message")
     @Description("Start the firework show with an optional server-wide message.")
     public void onStartCommand(CommandSender player, int duration, @Optional String message) {
+        if (plugin.getFireworks().isEmpty()) {
+            plugin.message(
+                player,
+                plugin.getConfig().getString("locale.commands.start.no-fireworks")
+            );
+
+            return;
+        }
+
         if (duration <= 0) {
             plugin.message(
                 player,

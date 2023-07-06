@@ -182,16 +182,21 @@ public final class Celebrate extends JavaPlugin {
     }
 
     /**
+     * Retrieve the configured firework data.
+     */
+    public Set<String> getFireworks() {
+        return getCelebrateData().getCelebrateData().getKeys(false);
+    }
+
+    /**
      * Explode a firework at the configured locations.
      */
     public boolean createFirework() {
-        Set<String> keys = getCelebrateData().getCelebrateData().getKeys(false);
-
-        if (keys.isEmpty()) {
+        if (getFireworks().isEmpty()) {
             return false;
         }
 
-        for (String key : keys) {
+        for (String key : getFireworks()) {
             Location location = getCelebrateData().getCelebrateData().getLocation(key);
 
             if (location == null || location.getWorld() == null) {
