@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.creativecraft'
-version = '1.0.7'
+version = '1.0.8'
 
 java {
   sourceCompatibility = JavaVersion.VERSION_16
